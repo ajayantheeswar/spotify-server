@@ -1,0 +1,60 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model users {
+  id       String   @default(dbgenerated()) @id
+  email    String   @unique
+  authtype String
+  password String
+  dob      DateTime
+  gender   String
+  name     String
+}
+
+model album {
+  id             String  @default(dbgenerated()) @id
+  album_name     String
+  image_url      String?
+  music_director String?
+  artist         artist? @relation(fields: [music_director], references: [id])
+  track          track[]
+}
+
+model artist {
+  id           String         @default(dbgenerated()) @id
+  artist_name  String
+  album        album[]
+  track_artist track_artist[]
+}
+
+model track {
+  id                 String         @default(dbgenerated()) @id
+  track_name         String
+  track_url          String
+  image_url          String?
+  albumn_id          String?
+  gerne              String?
+  album              album?         @relation(fields: [albumn_id], references: [id])
+  gerne_gerneTotrack gerne?         @relation(fields: [gerne], references: [id])
+  track_artist       track_artist[]
+}
+
+model track_artist {
+  id        String @default(dbgenerated()) @id
+  track_id  String
+  artist_id String
+  artist    artist @relation(fields: [artist_id], references: [id])
+  track     track  @relation(fields: [track_id], references: [id])
+}
+
+model gerne {
+  id         String  @id
+  gerne_name String
+  track      track[]
+}
