@@ -18,12 +18,14 @@ model users {
 }
 
 model album {
-  id             String  @default(dbgenerated()) @id
-  album_name     String
-  image_url      String?
-  music_director String?
-  artist         artist? @relation(fields: [music_director], references: [id])
-  track          track[]
+  id                       String    @default(dbgenerated()) @id
+  album_name               String
+  image_url                String?
+  music_director           String?
+  language                 String?
+  language_albumTolanguage language? @relation(fields: [language], references: [id])
+  artist                   artist?   @relation(fields: [music_director], references: [id])
+  track                    track[]
 }
 
 model artist {
@@ -54,7 +56,13 @@ model track_artist {
 }
 
 model gerne {
-  id         String  @id
+  id         String  @default(dbgenerated()) @id
   gerne_name String
   track      track[]
+}
+
+model language {
+  id       String  @default(dbgenerated()) @id
+  language String
+  album    album[]
 }
