@@ -8,17 +8,18 @@ datasource db {
 }
 
 model users {
-  id       String   @default(dbgenerated()) @id
-  email    String   @unique
+  id       String     @id @default(dbgenerated())
+  email    String     @unique
   authtype String
   password String
   dob      DateTime
   gender   String
   name     String
+  playlist playlist[]
 }
 
 model album {
-  id                       String    @default(dbgenerated()) @id
+  id                       String    @id @default(dbgenerated())
   album_name               String
   image_url                String?
   music_director           String?
@@ -29,26 +30,27 @@ model album {
 }
 
 model artist {
-  id           String         @default(dbgenerated()) @id
+  id           String         @id @default(dbgenerated())
   artist_name  String
   album        album[]
   track_artist track_artist[]
 }
 
 model track {
-  id                 String         @default(dbgenerated()) @id
+  id                 String           @id @default(dbgenerated())
   track_name         String
   track_url          String
   image_url          String?
   albumn_id          String?
   gerne              String?
-  album              album?         @relation(fields: [albumn_id], references: [id])
-  gerne_gerneTotrack gerne?         @relation(fields: [gerne], references: [id])
+  album              album?           @relation(fields: [albumn_id], references: [id])
+  gerne_gerneTotrack gerne?           @relation(fields: [gerne], references: [id])
   track_artist       track_artist[]
+  track_playlist     track_playlist[]
 }
 
 model track_artist {
-  id        String @default(dbgenerated()) @id
+  id        String @id @default(dbgenerated())
   track_id  String
   artist_id String
   artist    artist @relation(fields: [artist_id], references: [id])
@@ -56,13 +58,29 @@ model track_artist {
 }
 
 model gerne {
-  id         String  @default(dbgenerated()) @id
+  id         String  @id @default(dbgenerated())
   gerne_name String
   track      track[]
 }
 
 model language {
-  id       String  @default(dbgenerated()) @id
+  id       String  @id @default(dbgenerated())
   language String
   album    album[]
+}
+
+model playlist {
+  id             String           @id @default(dbgenerated())
+  name           String
+  userid         String
+  users          users            @relation(fields: [userid], references: [id])
+  track_playlist track_playlist[]
+}
+
+model track_playlist {
+  id          String   @id @default(dbgenerated())
+  playlist_id String
+  track_id    String
+  playlist    playlist @relation(fields: [playlist_id], references: [id])
+  track       track    @relation(fields: [track_id], references: [id])
 }

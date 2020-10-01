@@ -2,16 +2,15 @@ import { MiddlewareConsumer, Module } from '@nestjs/common';
 import { userAuthMiddleware } from 'src/auth/auth.middleware';
 import { authService } from 'src/auth/auth.service';
 import { PrismaService } from 'src/Prisma/prisma.service';
-import { ProfileController } from './profile.controller';
-import { ProfileService } from './profile.service';
-
+import { AlbumService } from './album.service';
+import { PlayerController } from './player.controller';
+import { PlayerService } from './player.service';
 
 @Module({
-    imports:[userAuthMiddleware],
-    controllers: [ProfileController],
-    providers: [ProfileService,PrismaService,authService],
+    controllers: [PlayerController],
+    providers: [PlayerService,PrismaService,AlbumService,authService],
 })
-export class ProfileModule {
+export class PlayerModule {
     configure(consumer: MiddlewareConsumer) {
         consumer
           .apply(userAuthMiddleware)

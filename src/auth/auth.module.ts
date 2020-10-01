@@ -5,9 +5,10 @@ import {PrismaService} from '../Prisma/prisma.service';
 
 import { MongooseModule } from '@nestjs/mongoose';
 
+
 @Module({
     imports : [],
     controllers : [authController],
-    providers : [authService,PrismaService]
+    providers : [authService,PrismaService,]
 })
 export class AuthModule {}

@@ -7,11 +7,13 @@ import { AuthModule } from './auth/auth.module';
 import { NestSessionOptions, SessionModule } from 'nestjs-session';
 import { MongooseModule  } from '@nestjs/mongoose';
 import { ProfileModule } from './profile/profile.module';
-import { AlbumModule } from './album/album.module';
+import { AdminModule } from './admin/admin.module';
+import { PlayerModule } from './Player/player.module';
 
 const mongoose = require('mongoose');
 const session= require('express-session');
 const mongoStore = require('connect-mongo')(session);
+
 
 
 @Module({
@@ -26,7 +28,8 @@ const mongoStore = require('connect-mongo')(session);
     }),
     AuthModule,
     ProfileModule,
-    AlbumModule
+    AdminModule,
+    PlayerModule
   ],
   controllers: [AppController],
   providers: [AppService],
