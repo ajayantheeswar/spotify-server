@@ -65,7 +65,6 @@ export class AlbumService {
     }
 
     async getSongsByArtist(artistID: any,limit?: any,skip?: any){
-
         const limitA = limit ? +limit : 15;
         const Skip = skip ? +skip : 0;
 

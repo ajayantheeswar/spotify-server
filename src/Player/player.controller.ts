@@ -3,10 +3,12 @@ import { Post } from '@nestjs/common/decorators/http/request-mapping.decorator';
 import { authService } from 'src/auth/auth.service';
 import { AlbumService } from './album.service';
 import { PlayerService } from './player.service';
+import {SearchService} from './search.service';
+
 
 @Controller('/player')
 export class PlayerController {
-    constructor(public album: AlbumService,public player: PlayerService,public auth: authService){}
+    constructor(public album: AlbumService,public player: PlayerService,public auth: authService,public search: SearchService){}
 
     @Get('/get-album-by-id/:albumID')
     getAlbumByID(@Param('albumID') albumID) {
@@ -119,6 +121,29 @@ export class PlayerController {
         const deleted = await this.player.deletePlaylist(sess.userID,playlistID)
         
         return deleted;
+    }
+
+    @Get('/search/general/:query')
+    async searchGeneral (@Param('query') queryText: string){
+        const searchResult = await this.search.searchAlbum(queryText,1)
+        const modifiedConst = searchResult.body.hits.hits.map(hit => hit._source)
+        return {
+            success : searchResult.body.hits.total.value > 0,
+            albums: modifiedConst,
+        }
+    }
+
+    @Get('/search/album/:query')
+    async searchAlbum (@Param('query') queryText: string, @Query('page') page: string){
+        const searchResult = await this.search.searchAlbum(queryText,+page)
+        const modifiedConst = searchResult.body.hits.hits.map(hit => hit._source)
+        const totalHits = searchResult.body.hits.total.value
+        return {
+            success : searchResult.body.hits.total.value > 0,
+            albums: modifiedConst,
+            totalResults: totalHits,
+            page : page
+        }
     }
 
 }
